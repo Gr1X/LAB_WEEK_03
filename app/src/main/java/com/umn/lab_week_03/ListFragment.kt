@@ -3,7 +3,7 @@ package com.umn.lab_week_03
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.View // Import View
+import android.view.View
 import android.view.ViewGroup
 import android.content.Context
 
@@ -17,19 +17,20 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ListFragment : Fragment(), View.OnClickListener { // <-- Add View.OnClickListener here
+class ListFragment : Fragment(), View.OnClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var coffeeListener: CoffeeListener;
+    private lateinit var coffeeListener: CoffeeListener
+
+    private lateinit var coffeeData: Map<Int, Pair<String, String>>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is CoffeeListener){
+        if (context is CoffeeListener) {
             coffeeListener = context
-        }
-        else{
+        } else {
             throw RuntimeException("Must implement CoffeeListener")
         }
     }
@@ -40,6 +41,11 @@ class ListFragment : Fragment(), View.OnClickListener { // <-- Add View.OnClickL
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        coffeeData = mapOf(
+            R.id.affogato to Pair(getString(R.string.affogato_title), getString(R.string.affogato_desc)),
+            R.id.americano to Pair(getString(R.string.americano_title), getString(R.string.americano_desc)),
+            R.id.latte to Pair(getString(R.string.latte_title), getString(R.string.latte_desc))
+        )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,14 +61,16 @@ class ListFragment : Fragment(), View.OnClickListener { // <-- Add View.OnClickL
             view.findViewById(R.id.americano),
             view.findViewById(R.id.latte)
         )
-        coffeeList.forEach{
-            it.setOnClickListener(this) // This line will now be valid
+        coffeeList.forEach {
+            it.setOnClickListener(this)
         }
     }
 
     override fun onClick(v: View?) {
-        v?.let{
-                coffee -> coffeeListener.onSelected(coffee.id)
+        v?.let {
+                coffeeView ->
+            val (title, description) = coffeeData[coffeeView.id] ?: return
+            coffeeListener.onSelected(title, description)
         }
     }
 
@@ -76,7 +84,8 @@ class ListFragment : Fragment(), View.OnClickListener { // <-- Add View.OnClickL
          * @return A new instance of fragment ListFragment.
          */
         // TODO: Rename and change types and number of parameters
-        @JvmStatic fun newInstance(param1: String, param2: String) =
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
             ListFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)

@@ -8,9 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 class DetailFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
-
     private var coffeeTitle: TextView? = null
     private var coffeeDesc: TextView? = null
 
@@ -27,31 +24,22 @@ class DetailFragment : Fragment() {
         coffeeTitle = view.findViewById(R.id.coffee_title)
         coffeeDesc = view.findViewById(R.id.coffee_desc)
 
-        // Set default text if no coffee is selected initially
-        if (coffeeTitle?.text.isNullOrEmpty()) {
-            coffeeTitle?.text = "Select a coffee"
-        }
-        if (coffeeDesc?.text.isNullOrEmpty()) {
-            coffeeDesc?.text = "Details will appear here"
-        }
+        val title = arguments?.getString(COFFEE_TITLE)
+        val description = arguments?.getString(COFFEE_DESC)
+
+        coffeeTitle?.text = title
+        coffeeDesc?.text = description
     }
 
-    fun setCoffeeData(id: Int) {
-        when (id) {
-            R.id.affogato -> {
-                coffeeTitle?.text = getString(R.string.affogato_title)
-                coffeeDesc?.text = getString(R.string.affogato_desc)
+    companion object {
+        private const val COFFEE_TITLE = "COFFEE_TITLE"
+        private const val COFFEE_DESC = "COFFEE_DESC"
+        fun newInstance(coffeeTitle: String, coffeeDesc: String) =
+            DetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString(COFFEE_TITLE, coffeeTitle)
+                    putString(COFFEE_DESC, coffeeDesc)
+                }
             }
-
-            R.id.americano -> {
-                coffeeTitle?.text = getString(R.string.americano_title)
-                coffeeDesc?.text = getString(R.string.americano_desc)
-            }
-
-            R.id.latte -> {
-                coffeeTitle?.text = getString(R.string.latte_title)
-                coffeeDesc?.text = getString(R.string.latte_desc)
-            }
-        }
     }
 }
