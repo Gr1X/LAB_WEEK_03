@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 class DetailFragment : Fragment() {
-    private var coffeeTitle: TextView? = null
-    private var coffeeDesc: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -21,25 +19,32 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        coffeeTitle = view.findViewById(R.id.coffee_title)
-        coffeeDesc = view.findViewById(R.id.coffee_desc)
 
-        val title = arguments?.getString(COFFEE_TITLE)
-        val description = arguments?.getString(COFFEE_DESC)
+        val coffeeId = arguments?.getInt(ListFragment.COFFEE_ID, -1) ?: -1
 
-        coffeeTitle?.text = title
-        coffeeDesc?.text = description
-    }
+        val coffeeTitleResId: Int
+        val coffeeDescResId: Int
 
-    companion object {
-        private const val COFFEE_TITLE = "COFFEE_TITLE"
-        private const val COFFEE_DESC = "COFFEE_DESC"
-        fun newInstance(coffeeTitle: String, coffeeDesc: String) =
-            DetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(COFFEE_TITLE, coffeeTitle)
-                    putString(COFFEE_DESC, coffeeDesc)
-                }
+        when (coffeeId) {
+            R.id.affogato -> {
+                coffeeTitleResId = R.string.affogato_title
+                coffeeDescResId = R.string.affogato_desc
             }
+            R.id.americano -> {
+                coffeeTitleResId = R.string.americano_title
+                coffeeDescResId = R.string.americano_desc
+            }
+            R.id.latte -> {
+                coffeeTitleResId = R.string.latte_title
+                coffeeDescResId = R.string.latte_desc
+            }
+            else -> {
+                coffeeTitleResId = R.string.app_name // Using app_name as a placeholder for "Unknown Coffee"
+                coffeeDescResId = R.string.hello_blank_fragment // Using a placeholder for "Details not available."
+            }
+        }
+
+        view.findViewById<TextView>(R.id.coffee_title).text = getString(coffeeTitleResId)
+        view.findViewById<TextView>(R.id.coffee_desc).text = getString(coffeeDescResId)
     }
 }
