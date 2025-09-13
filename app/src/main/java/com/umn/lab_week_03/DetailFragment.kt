@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 
 class DetailFragment : Fragment() {
 
@@ -38,6 +40,14 @@ class DetailFragment : Fragment() {
                 coffeeTitleResId = R.string.latte_title
                 coffeeDescResId = R.string.latte_desc
             }
+            R.id.cappuccino -> {
+                coffeeTitleResId = R.string.cappuccino_title
+                coffeeDescResId = R.string.cappuccino_desc
+            }
+            R.id.mocha -> {
+                coffeeTitleResId = R.string.mocha_title
+                coffeeDescResId = R.string.mocha_desc
+            }
             else -> {
                 coffeeTitleResId = R.string.app_name // Using app_name as a placeholder for "Unknown Coffee"
                 coffeeDescResId = R.string.hello_blank_fragment // Using a placeholder for "Details not available."
@@ -46,5 +56,9 @@ class DetailFragment : Fragment() {
 
         view.findViewById<TextView>(R.id.coffee_title).text = getString(coffeeTitleResId)
         view.findViewById<TextView>(R.id.coffee_desc).text = getString(coffeeDescResId)
+
+        view.findViewById<Button>(R.id.back_button).setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 }
